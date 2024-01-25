@@ -16,6 +16,7 @@ public class PlayerState_Run : PlayerState
 
     public override void LogicUpdate()
     {
+        _controller.OnWayPlatformCheck();
         if (!_input.Move)
         {
             //切换到空闲状态

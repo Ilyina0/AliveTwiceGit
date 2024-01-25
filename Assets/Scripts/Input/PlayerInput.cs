@@ -16,6 +16,7 @@ public class PlayerInput : MonoBehaviour
     public bool FleshPossession => playerInputActions.GamePlay.FleshPossession.WasPressedThisFrame();
     public bool Move => AxisX != 0;
     public float AxisX => axis.x;
+    public float AxisY => axis.y;
 
     #endregion
 

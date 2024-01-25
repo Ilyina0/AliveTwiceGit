@@ -23,6 +23,7 @@ public class PlayerState_Idle : PlayerState
 
    public override void LogicUpdate()
    {
+      _controller.OnWayPlatformCheck();
       if (_input.FleshPossession && _controller.isSoulSeparation)
       {
          if (_controller.Flesh.ISHavePossessableSoul)
@@ -47,7 +48,6 @@ public class PlayerState_Idle : PlayerState
          //切换到下落状态
          _playerStateMachine.SwitchState(typeof(PlayerState_Fall));
       }
-
       
       if (_input.SoulSeparation)
       {

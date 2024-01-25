@@ -23,14 +23,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("警告时间百分比")] private float waringPercentageOfTime;
     [Header("肉体相关")] 
     public GameObject playerFleshPrefab;
+    public float restoreTime;
+
+    private LayerMask originalLayer;
 
     private Coroutine soulCoroutine;
+    
     
     #endregion
 
     #region 属性
     public float moveSpeed => Mathf.Abs(_rigidBody.velocity.x);
     public bool isGround => _playerGroundDetector.IsGround;
+    public bool isOnOneWayPlatform => _playerGroundDetector.IsOneWayPlatformLayer;
     public bool isFalling => _rigidBody.velocity.y < 0.5f && !isGround;
     public AudioSource VoicePlayer { get; private set; }
     public bool Victory { get; private set; }
@@ -50,6 +55,7 @@ public class PlayerController : MonoBehaviour
         _playerGroundDetector = GetComponentInChildren<PlayerGroundDetector>();
         VoicePlayer = GetComponentInChildren<AudioSource>();
         Flesh = GetComponentInChildren<Flesh>();
+        originalLayer = LayerMask.NameToLayer("Completeness");
     }
 
     private void Start()
@@ -180,8 +186,35 @@ public class PlayerController : MonoBehaviour
         Soul = null;
         OnDead();
     }
+    #endregion
+
+    #region 单向平台
+
+    public void OnWayPlatformCheck()
+    {
+        if (isGround && gameObject.layer != originalLayer)
+        {
+            gameObject.layer = originalLayer;
+        }
+        
+        if (isOnOneWayPlatform && _playerInput.AxisY < -0.5f)
+        {
+            gameObject.layer = LayerMask.NameToLayer("OneWayPlatform");
+            
+            Invoke(nameof(RestorePlayerLayer),restoreTime);
+        }
+    }
+
+    private void RestorePlayerLayer()
+    {
+        if (!isGround && gameObject.layer != originalLayer)
+        {
+            gameObject.layer = originalLayer;
+        }
+    }
     
     #endregion
+    
     #endregion
     
     

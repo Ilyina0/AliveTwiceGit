@@ -28,6 +28,7 @@ public class PlayerState_Land : PlayerState
         {
             _playerStateMachine.SwitchState(typeof(PlayerState_JumpUp));
         }
+        _controller.OnWayPlatformCheck();
         //落地硬直
         if(stateDuration < stiffTime) return;
         if (_input.Move)
